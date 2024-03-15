@@ -1,29 +1,30 @@
 import { Button, Container, Paper, TextField } from "@mui/material";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Students = () => {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [students, setStudents] = useState([]);
+
   const handleClick = (e) => {
     e.preventDefault();
     const student = { name, address };
     console.log(student);
-    fetch("http://localhost:8080/student/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(student),
-    }).then(() => {
-      console.log("New Student added");
-    });
+    axios
+      .post("http://localhost:8080/example/student/add", student)
+      .then((res) => {
+        console.log("form submitting", res.data);
+      })
+      .catch((err) => {
+        console.log("error");
+      });
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/student/getAll")
-      .then((res) => res.json())
-      .then((result) => {
-        setStudents(result);
-      });
+    axios.get("http://localhost:8080/example/student/getAll").then((res) => {
+      setStudents(res.data);
+    });
   }, []);
 
   return (
